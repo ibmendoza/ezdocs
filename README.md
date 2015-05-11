@@ -38,7 +38,7 @@ go get github.com/russross/blackfriday-tool
 
 #### 2. Create your Markdown content
 
-#### 3. Compile Markdown to HTML
+#### 3. Convert Markdown to HTML
 
 ```
 blackfriday-tool article.md article.html
