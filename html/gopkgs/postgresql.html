@@ -1,0 +1,48 @@
+<h3>pq - PostgreSQL driver (<a href="https://github.com/lib/pq">https://github.com/lib/pq</a>)</h3>
+
+<h3>Install</h3>
+
+<pre><code>go get github.com/lib/pq
+</code></pre>
+
+<h3>Docs</h3>
+
+<p>For detailed documentation and basic usage examples, please see the package documentation at <a href="http://godoc.org/github.com/lib/pq">http://godoc.org/github.com/lib/pq</a>.</p>
+
+<h3>Tests</h3>
+
+<p><code>go test</code> is used for testing.  A running PostgreSQL server is
+required, with the ability to log in.  The default database to connect
+to test with is &ldquo;pqgotest,&rdquo; but it can be overridden using environment
+variables.</p>
+
+<p>Example:</p>
+
+<pre><code>PGHOST=/var/run/postgresql go test github.com/lib/pq
+</code></pre>
+
+<p>Optionally, a benchmark suite can be run as part of the tests:</p>
+
+<pre><code>PGHOST=/var/run/postgresql go test -bench .
+</code></pre>
+
+<h3>Features</h3>
+
+<ul>
+<li>SSL</li>
+<li>Handles bad connections for <code>database/sql</code></li>
+<li>Scan <code>time.Time</code> correctly (i.e. <code>timestamp[tz]</code>, <code>time[tz]</code>, <code>date</code>)</li>
+<li>Scan binary blobs correctly (i.e. <code>bytea</code>)</li>
+<li>Package for <code>hstore</code> support</li>
+<li>COPY FROM support</li>
+<li>pq.ParseURL for converting urls to connection strings for sql.Open.</li>
+<li>Many libpq compatible environment variables</li>
+<li>Unix socket support</li>
+<li>Notifications: <code>LISTEN</code>/<code>NOTIFY</code></li>
+</ul>
+
+<h3>License</h3>
+
+<p>MIT</p>
+
+<p>Copyright &copy; 2011 by Blake Mizerany et al</p>

@@ -1,0 +1,38 @@
+<h3><a href="https://github.com/ibmendoza/go_ne">https://github.com/ibmendoza/go_ne</a></h3>
+
+<p>Fork of <a href="https://github.com/gophergala/go_ne">https://github.com/gophergala/go_ne</a></p>
+
+<p>Kiss is an orchestration tool courtesy of James Rutherford and Tobias Haar, and can be used in conjunction with Anchor configuration management tool.</p>
+
+<p>Kiss allows you to execute arbitrary tasks on a remote machine (or even locally). In Anchor CM&rsquo;s case, you upload the cmdfile to the remote servers you want to configure, and let Kiss update you with the results.</p>
+
+<h3>Install</h3>
+
+<pre><code class="language-go">go get github.com/ibmendoza/go_ne/kiss
+</code></pre>
+
+<h3>Usage</h3>
+
+<pre><code class="language-shell">$ kiss -group=web -task=deploy
+</code></pre>
+
+<h3>Sample <a href="https://github.com/ibmendoza/go_ne/blob/master/kiss/.kiss.yml">YAML</a></h3>
+
+<p>Assuming you uploaded cmdfile.txt to home folder of your server</p>
+
+<pre><code class="language-yaml">servergroups:
+  web:
+    - host: 192.168.1.102
+      username: &quot;root&quot;
+      password: &quot;YourPasswordHere&quot;
+      port: 22
+
+tasks:
+  setup:
+    steps:
+      - command: cd /home &amp;&amp; ./anchor cmdfile.txt
+</code></pre>
+
+<h3>This is not RPC</h3>
+
+<p>You upload cmdfile to remote servers which then executes it locally</p>

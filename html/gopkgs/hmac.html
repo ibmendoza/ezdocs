@@ -1,0 +1,57 @@
+<h3>Courtesy: <a href="http://www.jokecamp.com/blog/examples-of-creating-base64-hashes-using-hmac-sha256-in-different-languages/#go">Adapted from Joe Kampschmidt&rsquo;s Code</a></h3>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;crypto/hmac&quot;
+    &quot;crypto/sha256&quot;
+    &quot;crypto/sha512&quot;
+    &quot;encoding/base64&quot;
+    &quot;fmt&quot;
+    &quot;hash&quot;
+)
+
+//http://play.golang.org/p/NfFgzhtj-N
+
+func ComputeHmac256(message string, secret string) string {
+    key := []byte(secret)
+    h := hmac.New(sha256.New, key)
+    h.Write([]byte(message))
+    return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
+
+func computeHmac(alg, message, secret string) string {
+    key := []byte(secret)
+
+    var h hash.Hash
+
+    if alg == &quot;HS256&quot; {
+        h = hmac.New(sha256.New, key)
+    }
+
+    if alg == &quot;HS384&quot; {
+        h = hmac.New(sha512.New384, key)
+    }
+
+    if alg == &quot;HS512&quot; {
+        h = hmac.New(sha512.New, key)
+    }
+
+    h.Write([]byte(message))
+    
+    return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
+
+func main() {
+    fmt.Println(computeHmac(&quot;HS512&quot;, &quot;Message&quot;, &quot;secret&quot;))
+    fmt.Println(computeHmac(&quot;HS384&quot;, &quot;Message&quot;, &quot;secret&quot;))
+    fmt.Println(computeHmac(&quot;HS256&quot;, &quot;Message&quot;, &quot;secret&quot;))  
+}
+</code></pre>
+
+<h3>Output</h3>
+
+<pre><code class="language-go">z12KOCXYQjCZyKf6WP+yYBONCS+IwNuv9oPbRcL4u+WetE4BvAm1Ysy+bEyGxq/QDLAufO0sPnVLUl/ubvPGdQ==
+eoYi/PjpuFvMLLkozL4H0uoOIoCBurWdRYjsrANTjZ+dTpQZXnqq7gwPUPP3HRs2
+qnR8UCqJggD55PohusaBNviGoOJ67HC6Btry4qXLVZc=
+</code></pre>

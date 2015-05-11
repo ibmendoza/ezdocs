@@ -1,0 +1,75 @@
+<h3><a href="https://github.com/ibmendoza/salt">https://github.com/ibmendoza/salt</a></h3>
+
+<p>A simple NaCl library to generate an encrypted token with claims like that of JWT. NaCl already provides encrypt-then-MAC capability so you don&rsquo;t need HMAC to sign the token</p>
+
+<p>Claims: set exp using the convenience function ExpiresInSeconds, ExpiresInMinutes or ExpiresInHours</p>
+
+<p>Generate NaCl key: call GenerateKey()</p>
+
+<h3>Generate a Token</h3>
+
+<pre><code class="language-go">func Sign(claims map[string]interface{}, naclKey string) (string, error)
+</code></pre>
+
+<p>Rules:</p>
+
+<ul>
+<li>claims is a map or the equivalent of object in JavaScript</li>
+<li>naclKey is used to encrypt the claims</li>
+<li>call GenerateKey() to generate naclKey</li>
+</ul>
+
+<h3>Verify a Token</h3>
+
+<pre><code class="language-go">func Verify(token, naclKey string) (map[string]interface{}, error)
+</code></pre>
+
+<p>Returns the corresponding claims as map[string]interface{} if token is valid</p>
+
+<h3>Example</h3>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;github.com/ibmendoza/salt&quot;
+    &quot;time&quot;
+)
+
+func main() {
+
+    claims := make(map[string]interface{})
+    claims[&quot;sub&quot;] = &quot;1234567890&quot;
+    claims[&quot;name&quot;] = &quot;John Doe&quot;
+    claims[&quot;admin&quot;] = true
+    claims[&quot;exp&quot;] = salt.ExpiresInSeconds(1)
+    //claims[&quot;exp&quot;] = jwt.ExpiresInMinutes(1)
+    //claims[&quot;exp&quot;] = jwt.ExpiresInHours(1)
+
+    key, _ := salt.GenerateKey()
+    fmt.Println(key)
+
+    token, _ := salt.Sign(claims, key)
+
+    fmt.Println(token)
+
+    fmt.Println(salt.Verify(token, key))
+
+    timer1 := time.NewTimer(time.Second * 2) 
+    &lt;-timer1.C
+
+    fmt.Println(salt.Verify(token, key)) //expired after 2secs
+}
+</code></pre>
+
+<h3>Author</h3>
+
+<p>Isagani Mendoza (<a href="http://itjumpstart.wordpress.com">http://itjumpstart.wordpress.com</a>)</p>
+
+<h3>License</h3>
+
+<p>MIT</p>
+
+<h3>Want JWT instead?</h3>
+
+<p>See <a href="http://github.com/ibmendoza/jwt">http://github.com/ibmendoza/jwt</a></p>

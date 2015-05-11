@@ -1,0 +1,97 @@
+<h3><a href="https://github.com/hoisie/mustache">https://github.com/hoisie/mustache</a></h3>
+
+<p>mustache.go is an implementation of the mustache template language in Go. It is better suited for website templates than Go&rsquo;s native pkg/template. mustache.go is fast &ndash; it parses templates efficiently and stores them in a tree-like structure which allows for fast execution.</p>
+
+<h3>Documentation</h3>
+
+<p>For more information about mustache, check out the <a href="http://github.com/defunkt/mustache">mustache project page</a> or the <a href="http://mustache.github.com/mustache.5.html">mustache manual</a>.</p>
+
+<p>Also check out some <a href="http://github.com/defunkt/mustache/tree/master/examples/">example mustache files</a></p>
+
+<h3>Installation</h3>
+
+<p>To install mustache.go, simply run</p>
+
+<p><code>go get github.com/hoisie/mustache</code>.</p>
+
+<p>To use it in a program, use</p>
+
+<p><code>import &quot;github.com/hoisie/mustache&quot;</code></p>
+
+<h3>Usage</h3>
+
+<p>There are four main methods in this package:</p>
+
+<pre><code class="language-go">    func Render(data string, context ...interface{}) string
+    
+    func RenderFile(filename string, context ...interface{}) string
+    
+    func ParseString(data string) (*Template, os.Error)
+    
+    func ParseFile(filename string) (*Template, os.Error)
+</code></pre>
+
+<h3>Example</h3>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+    &quot;github.com/hoisie/mustache&quot;
+)
+
+func main() {
+    //for simplicity, json must be a struct of key-value pairs of
+    //a) primitives (boolean, numbers, strings)
+    //b) composite (array or objects)
+
+    //Accepts any data type (interface{})
+
+    byt := []byte(`{&quot;num&quot;:6.13,&quot;strs&quot;:[&quot;a&quot;,&quot;b&quot;]}`)
+
+    beatles := []byte(
+
+        `{
+  &quot;beatles&quot;: [
+    { &quot;firstName&quot;: &quot;John&quot;, &quot;lastName&quot;: &quot;Lennon&quot; },
+    { &quot;firstName&quot;: &quot;Paul&quot;, &quot;lastName&quot;: &quot;McCartney&quot; },
+    { &quot;firstName&quot;: &quot;George&quot;, &quot;lastName&quot;: &quot;Harrison&quot; },
+    { &quot;firstName&quot;: &quot;Ringo&quot;, &quot;lastName&quot;: &quot;Starr&quot; }
+  ]
+}`)
+
+    var dat map[string]interface{}
+
+    if err := json.Unmarshal(byt, &amp;dat); err != nil {
+        panic(err)
+    }
+    fmt.Println(dat)
+
+    rendered := mustache.Render(&quot;{{num}}, strs {{strs}}&quot;, dat)
+    fmt.Println(rendered)
+
+    data := mustache.Render(&quot;hello {{c}}&quot;, map[string]string{&quot;c&quot;: &quot;world&quot;})
+    fmt.Println(data)
+
+    //beatles
+    if err := json.Unmarshal(beatles, &amp;dat); err != nil {
+        panic(err)
+    }
+    data = mustache.Render(&quot;{{#beatles}} * {{firstName}} &quot;+&quot;\n {{/beatles}}&quot;, dat)
+
+    fmt.Println(data)
+
+}
+</code></pre>
+
+<h3>Output</h3>
+
+<pre><code>map[num:6.13 strs:[a b]]
+6.13, strs [a b]
+hello world
+  * John
+  * Paul
+  * George
+  * Ringo
+</code></pre>

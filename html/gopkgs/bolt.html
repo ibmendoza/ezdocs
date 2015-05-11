@@ -1,0 +1,74 @@
+<h3><a href="https://github.com/boltdb/bolt">https://github.com/boltdb/bolt</a></h3>
+
+<p>Bolt is a pure Go key/value store inspired by [Howard Chu&rsquo;s][hyc_symas] and
+the [LMDB project][lmdb]. The goal of the project is to provide a simple,
+fast, and reliable database for projects that don&rsquo;t require a full database
+server such as Postgres or MySQL.</p>
+
+<p>Since Bolt is meant to be used as such a low-level piece of functionality,
+simplicity is key. The API will be small and only focus on getting values
+and setting values. That&rsquo;s it.</p>
+
+<p>[hyc_symas]: <a href="https://twitter.com/hyc_symas">https://twitter.com/hyc_symas</a> [lmdb]: <a href="http://symas.com/mdb/">http://symas.com/mdb/</a></p>
+
+<h3>Project Status</h3>
+
+<p>Bolt is stable and the API is fixed. Full unit test coverage and randomized
+black box testing are used to ensure database consistency and thread safety.
+Bolt is currently in high-load production environments serving databases as
+large as 1TB. Many companies such as Shopify and Heroku use Bolt-backed
+services every day.</p>
+
+<h3>Installing</h3>
+
+<p>To start using Bolt, install Go and run <code>go get</code>:</p>
+
+<pre><code class="language-sh">$ go get github.com/boltdb/bolt/...
+</code></pre>
+
+<p>This will retrieve the library and install the <code>bolt</code> command line utility into
+your <code>$GOBIN</code> path.</p>
+
+<h3>Opening a database</h3>
+
+<p>The top-level object in Bolt is a <code>DB</code>. It is represented as a single file on
+your disk and represents a consistent snapshot of your data.</p>
+
+<p>To open your database, simply use the <code>bolt.Open()</code> function:</p>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;log&quot;
+
+    &quot;github.com/boltdb/bolt&quot;
+)
+
+func main() {
+    // Open the my.db data file in your current directory.
+    // It will be created if it doesn't exist.
+    db, err := bolt.Open(&quot;my.db&quot;, 0600, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    ...
+}
+</code></pre>
+
+<p>Please note that Bolt obtains a file lock on the data file so multiple processes
+cannot open the same database at the same time. Opening an already open Bolt
+database will cause it to hang until the other process closes it. To prevent
+an indefinite wait you can pass a timeout option to the <code>Open()</code> function:</p>
+
+<pre><code class="language-go">db, err := bolt.Open(&quot;my.db&quot;, 0600, &amp;bolt.Options{Timeout: 1 * time.Second})
+</code></pre>
+
+<h3>License</h3>
+
+<p>MIT</p>
+
+<h3>Authors</h3>
+
+<p>Ben Johnson et al</p>

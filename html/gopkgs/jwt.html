@@ -1,0 +1,102 @@
+<h3><a href="https://github.com/ibmendoza/jwt">https://github.com/ibmendoza/jwt</a></h3>
+
+<p>A simple JWT library using HMAC with optional NaCl encryption of claims meant to address critical vulnerabilities posted at <a href="https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries">https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries</a></p>
+
+<p>Algorithms: HS256, HS384 and HS512 only</p>
+
+<p>Claims: set exp using the convenience function ExpiresInSeconds, ExpiresInMinutes or ExpiresInHours</p>
+
+<p>Optional encryption of claims: call GenerateKey()</p>
+
+<h3>Generate a Token</h3>
+
+<pre><code class="language-go">func Sign(alg string, claims map[string]interface{}, secret, naclKey string) (string, error)
+</code></pre>
+
+<p>Rules:</p>
+
+<ul>
+<li>alg can be HS256, HS384 or HS512 only (none is an error)</li>
+<li>claims is a map or the equivalent of object in JavaScript</li>
+<li>secret is used in HMAC signing</li>
+<li>naclKey is used if you want to encrypt the claims (otherwise set it to &ldquo;&rdquo;)</li>
+<li>call GenerateKey() to generate naclKey</li>
+</ul>
+
+<h3>Verify a Token</h3>
+
+<pre><code class="language-go">func Verify(token, secret, naclKey string) (map[string]interface{}, error)
+</code></pre>
+
+<p>Returns the corresponding claims as map[string]interface{} if token is valid</p>
+
+<h3>Example</h3>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;github.com/ibmendoza/jwt&quot;
+    &quot;time&quot;
+)
+
+func main() {
+
+    claims := make(map[string]interface{})
+    claims[&quot;sub&quot;] = &quot;1234567890&quot;
+    claims[&quot;name&quot;] = &quot;John Doe&quot;
+    claims[&quot;admin&quot;] = true
+    claims[&quot;exp&quot;] = jwt.ExpiresInSeconds(3)
+    //claims[&quot;exp&quot;] = jwt.ExpiresInMinutes(1)
+    //claims[&quot;exp&quot;] = jwt.ExpiresInHours(1)
+
+    //fmt.Println(timeNow())
+
+    naclKey, err := jwt.GenerateKey()
+    fmt.Println(naclKey)
+
+    token, err := jwt.Sign(&quot;HS384&quot;, claims, &quot;secret&quot;, naclKey)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    fmt.Println(token, err) //encrypted claims
+
+    token2, err := jwt.Sign(&quot;HS256&quot;, claims, &quot;secret&quot;, &quot;&quot;)
+    if err != nil {
+        fmt.Println(err)
+    }
+
+    fmt.Println(token2, err) //non-encrypted claims
+
+    timer1 := time.NewTimer(time.Second * 2)
+    &lt;-timer1.C
+
+    //fmt.Println(timeNow()) //after 2sec
+
+    fmt.Println(jwt.Verify(token, &quot;secret&quot;, naclKey)) //true
+    fmt.Println(jwt.Verify(token, &quot;scret&quot;, &quot;&quot;))       //false
+
+    fmt.Println(jwt.Verify(token2, &quot;secret&quot;, &quot;&quot;))     //true
+    fmt.Println(jwt.Verify(token2, &quot;scret&quot;, &quot;&quot;))      //false
+    fmt.Println(jwt.Verify(token2, &quot;secret&quot;, &quot;asdf&quot;)) //false
+    fmt.Println(jwt.Verify(token2, &quot;secret&quot;, &quot;&quot;))     //false
+
+    timer1 = time.NewTimer(time.Second * 2) //after 4secs
+    &lt;-timer1.C
+
+    fmt.Println(jwt.Verify(token, &quot;secret&quot;, naclKey)) //expired
+}
+</code></pre>
+
+<h3>Author</h3>
+
+<p>Isagani Mendoza (<a href="http://itjumpstart.wordpress.com">http://itjumpstart.wordpress.com</a>)</p>
+
+<h3>License</h3>
+
+<p>MIT</p>
+
+<h3>Always-Encrypted Token? Try Salt</h3>
+
+<p><a href="http://github.com/ibmendoza/salt">http://github.com/ibmendoza/salt</a></p>

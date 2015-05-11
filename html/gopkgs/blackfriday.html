@@ -1,0 +1,60 @@
+<h3><a href="https://github.com/russross/blackfriday">https://github.com/russross/blackfriday</a></h3>
+
+<p>Blackfriday is a Markdown processor implemented in Go. It is paranoid about its input (so you can safely feed it user-supplied data), it is fast, it supports common extensions (tables, smart
+punctuation substitutions, etc.), and it is safe for all UTF-8 (unicode) input.</p>
+
+<p>HTML output is currently supported, along with Smartypants
+extensions. An experimental LaTeX output engine is also included.</p>
+
+<p>It started as a translation from C of Sundown.</p>
+
+<h3>Installation</h3>
+
+<pre><code>go get github.com/russross/blackfriday
+</code></pre>
+
+<p>will download, compile, and install the package into your <code>$GOPATH</code>
+directory hierarchy. Alternatively, you can achieve the same if you
+import it into a project:</p>
+
+<pre><code>import &quot;github.com/russross/blackfriday&quot;
+</code></pre>
+
+<p>and <code>go get</code> without parameters.</p>
+
+<h3>Usage</h3>
+
+<p>For basic usage, it is as simple as getting your input into a byte
+slice and calling:</p>
+
+<pre><code>output := blackfriday.MarkdownBasic(input)
+</code></pre>
+
+<p>This renders it with no extensions enabled. To get a more useful
+feature set, use this instead:</p>
+
+<pre><code>output := blackfriday.MarkdownCommon(input)
+</code></pre>
+
+<h3>Sanitize untrusted content</h3>
+
+<p>Blackfriday itself does nothing to protect against malicious content. If you are
+dealing with user-supplied markdown, we recommend running blackfriday&rsquo;s output
+through HTML sanitizer such as
+<a href="https://github.com/microcosm-cc/bluemonday">Bluemonday</a>.</p>
+
+<p>Here&rsquo;s an example of simple usage of blackfriday together with bluemonday:</p>
+
+<pre><code class="language-go">import (
+    &quot;github.com/microcosm-cc/bluemonday&quot;
+    &quot;github.com/russross/blackfriday&quot;
+)
+
+// ...
+unsafe := blackfriday.MarkdownCommon(input)
+html := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
+</code></pre>
+
+<h3>License</h3>
+
+<p>Simplified BSD License. Copyright © 2011 Russ Ross</p>

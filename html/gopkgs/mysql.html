@@ -1,0 +1,55 @@
+<h3>Go-MySQL-Driver (<a href="https://github.com/go-sql-driver/mysql">https://github.com/go-sql-driver/mysql</a>)</h3>
+
+<p>A MySQL-Driver for Go&rsquo;s <a href="http://golang.org/pkg/database/sql">database/sql</a> package</p>
+
+<h3>Features</h3>
+
+<ul>
+<li>Lightweight and <a href="https://github.com/go-sql-driver/sql-benchmark" title="golang MySQL-Driver performance">fast</a></li>
+<li>Native Go implementation. No C-bindings, just pure Go</li>
+<li>Connections over TCP/IPv4, TCP/IPv6 or Unix domain sockets</li>
+<li>Automatic handling of broken connections</li>
+<li>Automatic Connection Pooling <em>(by database/sql package)</em></li>
+<li>Supports queries larger than 16MB</li>
+<li>Full <a href="http://golang.org/pkg/database/sql/#RawBytes"><code>sql.RawBytes</code></a> support.</li>
+<li>Intelligent <code>LONG DATA</code> handling in prepared statements</li>
+<li>Secure <code>LOAD DATA LOCAL INFILE</code> support with file Whitelisting and <code>io.Reader</code> support</li>
+<li>Optional <code>time.Time</code> parsing</li>
+<li>Optional placeholder interpolation</li>
+</ul>
+
+<h3>Requirements</h3>
+
+<ul>
+<li>Go 1.2 or higher</li>
+<li>MySQL (4.1+), MariaDB, Percona Server, Google CloudSQL or Sphinx (2.2.3+)</li>
+</ul>
+
+<hr />
+
+<h3>Installation</h3>
+
+<p>Simple install the package to your <a href="http://code.google.com/p/go-wiki/wiki/GOPATH" title="GOPATH">$GOPATH</a> with the <a href="http://golang.org/cmd/go/" title="go command">go tool</a> from shell:</p>
+
+<pre><code class="language-bash">$ go get github.com/go-sql-driver/mysql
+</code></pre>
+
+<p>Make sure <a href="http://git-scm.com/downloads">Git is installed</a> on your machine and in your system&rsquo;s <code>PATH</code>.</p>
+
+<h3>Usage</h3>
+
+<p><em>Go MySQL Driver</em> is an implementation of Go&rsquo;s <code>database/sql/driver</code> interface. You only need to import the driver and can use the full <a href="http://golang.org/pkg/database/sql"><code>database/sql</code></a> API then.</p>
+
+<p>Use <code>mysql</code> as <code>driverName</code> and a valid <a href="#dsn-data-source-name">DSN</a>  as <code>dataSourceName</code>:</p>
+
+<pre><code class="language-go">import &quot;database/sql&quot;
+import _ &quot;github.com/go-sql-driver/mysql&quot;
+
+db, err := sql.Open(&quot;mysql&quot;, &quot;user:password@/dbname&quot;)
+</code></pre>
+
+<p><a href="https://github.com/go-sql-driver/mysql/wiki/Examples" title="Go-MySQL-Driver Examples">Examples are available in our Wiki</a>.</p>
+
+<h3>License</h3>
+
+<p>MPL 2.0 Copyright Julien Schmidt et al</p>

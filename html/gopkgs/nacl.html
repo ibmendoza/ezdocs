@@ -1,0 +1,27 @@
+<h3><a href="https://github.com/ereyes01/cryptohelper">https://github.com/ereyes01/cryptohelper</a></h3>
+
+<p>Cryptohelper provides very simple-to-use wrappers around NaCl&rsquo;s secretbox package. This package only provides convenience functions, but does not try to actually do any of the crypto&hellip; that is best left to the experts!</p>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;github.com/ereyes01/cryptohelper&quot;
+)
+
+func main() {
+    messageToEncryptThenMAC := &quot;The big brown fox jumps over the lazy dog&quot;
+
+    secret, _ := cryptohelper.RandomKey()
+
+    msgEncrypted, _ := cryptohelper.SecretboxEncrypt(messageToEncryptThenMAC, secret)
+
+    fmt.Println(&quot;Encrypted string&quot;)
+    fmt.Println(msgEncrypted)
+
+    msgDecrypted, _ := cryptohelper.SecretboxDecrypt(msgEncrypted, secret)
+
+    fmt.Println(&quot;Decrypted string&quot;)
+    fmt.Println(msgDecrypted)
+}
+</code></pre>

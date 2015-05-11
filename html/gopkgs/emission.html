@@ -1,0 +1,61 @@
+<h3>github.com/chuckpreslar/emission</h3>
+
+<p>A simple event emitter for Go.</p>
+
+<h3>Installation</h3>
+
+<p>With Google&rsquo;s <a href="http://www.golang.org">Go</a> installed on your machine:</p>
+
+<pre><code>$ go get -u github.com/chuckpreslar/emission
+</code></pre>
+
+<h3>Usage</h3>
+
+<p>If you&rsquo;ve ever used an event emitter before, using Emission should be very familiar.</p>
+
+<pre><code class="language-go">package main
+
+import (
+  &quot;fmt&quot;
+)
+
+import (
+  &quot;github.com/chuckpreslar/emission&quot;
+)
+
+func main() {
+  emitter := emission.NewEmitter()
+
+  hello := func(to string) {
+    fmt.Printf(&quot;Hello %s!\n&quot;, to)
+  }
+  
+  count := func(count int) {
+    for i := 0; i &lt; count; i++ {
+      fmt.Println(i)
+    }
+  }
+  
+  emitter.On(&quot;hello&quot;, hello).
+    On(&quot;count&quot;, count).
+    Emit(&quot;hello&quot;, &quot;world&quot;).
+    Emit(&quot;count&quot;, 5)
+}
+</code></pre>
+
+<h3>About</h3>
+
+<p>The <code>emission</code> package provides an event emitter making use of the reflect packages ability to call functions.  Using the <code>Call</code> method on the value of a function allows passing any type of function to the event emiiter, regardless of the functions parameters.</p>
+
+<h3>Documentation</h3>
+
+<p>View godoc&rsquo;s or visit <a href="http://godoc.org/github.com/chuckpreslar/emission">godoc.org</a>.</p>
+
+<pre><code>$ godoc emission
+</code></pre>
+
+<h3>License</h3>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright &copy; 2013 - 2015 Chuck Preslar</p>

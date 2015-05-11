@@ -1,0 +1,69 @@
+<h3>Graph Data Structure (<a href="https://github.com/akualab/graph">https://github.com/akualab/graph</a>)</h3>
+
+<p>A thread-safe implementation of a graph data structure as a data store.</p>
+
+<p><strong>This project is a fork of <a href="https://github.com/sauerbraten/graph-store">https://github.com/sauerbraten/graph-store</a> adapted to support directed graphs with weighted arcs. Removed locks.</strong></p>
+
+<p>Removed gorouting synchronization because implementing and maintaining a goroutine-safe library is too complex. Concurrent access with writes can be synchronized externally. Mutliple goroutines reading is OK. This is the same approach used in the standard library.</p>
+
+<p>Features:</p>
+
+<ul>
+<li>Directed graph with weighted arcs.</li>
+<li>Graph manipulation methods.</li>
+<li>A-Star search.</li>
+<li>IO support for GOB/JSON/YAML</li>
+<li>Arc weight normalization.</li>
+</ul>
+
+<p>For more info about graphs visit <a href="https://en.wikipedia.org/wiki/Graph_(abstract_data_type">https://en.wikipedia.org/wiki/Graph_(abstract_data_type</a>)</p>
+
+<h3>Usage</h3>
+
+<p>Get the package:</p>
+
+<pre><code>$ go get github.com/akualab/graph
+</code></pre>
+
+<h3>Create a graph.</h3>
+
+<pre><code class="language-Go">    g := graph.New()
+
+    // create nodes with values.
+    g.Set(&quot;1&quot;, 123)
+    g.Set(&quot;2&quot;, 678)
+    g.Set(&quot;3&quot;, &quot;abc&quot;)
+    g.Set(&quot;4&quot;, &quot;xyz&quot;)
+    g.Set(&quot;xxx&quot;, &quot;yyy&quot;)
+
+    // make connections (ignoring errors for clarity.)
+    g.Connect(&quot;1&quot;, &quot;2&quot;, 5)
+    g.Connect(&quot;1&quot;, &quot;3&quot;, 1)
+    g.Connect(&quot;2&quot;, &quot;3&quot;, 9)
+    g.Connect(&quot;4&quot;, &quot;2&quot;, 3)
+    g.Connect(&quot;4&quot;, &quot;xxx&quot;, 1.11)
+
+    // to JSON
+    jsonEncoded, _ := json.Marshal(g)
+
+    // to YAML
+    yamlEncoded, _ := goyaml.Marshal(g)
+
+    // to GOB
+    buf := &amp;bytes.Buffer{}
+    enc := gob.NewEncoder(buf)
+    enc.Encode(g)
+
+    // to DOT (use the dot sub-package.)
+    dot.DOT(g, &quot;some graph&quot;)
+</code></pre>
+
+<p>See tests for details.</p>
+
+<h3>Documentation</h3>
+
+<p>For full package documentation, visit <a href="http://godoc.org/github.com/akualab/graph">http://godoc.org/github.com/akualab/graph</a></p>
+
+<h3>License</h3>
+
+<p>Simplified BSD License</p>

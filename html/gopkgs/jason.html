@@ -1,0 +1,179 @@
+<h3><a href="https://github.com/ibmendoza/jason">https://github.com/ibmendoza/jason</a></h3>
+
+<p>Fork of <a href="https://github.com/antonholmquist/jason">https://github.com/antonholmquist/jason</a></p>
+
+<p>Jason is designed to be convenient for reading arbitrary JSON while still honoring the strictness of the language. Inspired by other libraries and improved to work well for common use cases. It currently focuses on reading JSON data rather than creating it. <a href="http://godoc.org/github.com/antonholmquist/jason">API Documentation</a> can be found on godoc.org.</p>
+
+<h3>Install</h3>
+
+<pre><code class="language-shell">go get github.com/ibmendoza/jason
+</code></pre>
+
+<h3>Import</h3>
+
+<pre><code class="language-go">import (
+  &quot;github.com/ibmendoza/jason&quot;
+)
+</code></pre>
+
+<h3>Data types</h3>
+
+<p>The following golang values are used to represent JSON data types. It is consistent with how <code>encoding/json</code> uses primitive types.</p>
+
+<ul>
+<li><code>bool</code>, for JSON booleans</li>
+<li><code>json.Number/float64/int64</code>, for JSON numbers</li>
+<li><code>string</code>, for JSON strings</li>
+<li><code>[]*Value</code>, for JSON arrays</li>
+<li><code>map[string]*Value</code>, for JSON objects</li>
+<li><code>nil</code> for JSON null</li>
+</ul>
+
+<h3>Example</h3>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;github.com/antonholmquist/jason&quot;
+    &quot;log&quot;
+)
+
+func processSlc(slc []*jason.Object) {
+    lenSlcKeys := len(slc)
+    var err error
+    var title, url string
+    for i := 0; i &lt; lenSlcKeys; i++ {
+
+        //print object
+        obj, err1 := slc[i].GetObject()
+        log.Println(&quot;OBJECT&quot;)
+        if err1 == nil {
+            log.Println(obj)
+
+            log.Println(&quot;TITLE&quot;)
+            title, err = obj.GetString(&quot;title&quot;)
+
+            if err == nil {
+                log.Println(title)
+            }
+
+            log.Println(&quot;URL&quot;)
+            url, err = obj.GetString(&quot;url&quot;)
+
+            if err == nil {
+                log.Println(url)
+            }
+        }
+    }
+}
+
+func main() {
+    exampleJSON :=
+        `
+{
+    &quot;a1&quot; : {
+        &quot;name&quot; : &quot;HEADING 1&quot;,
+        &quot;b2&quot; : {
+            &quot;name&quot; : &quot;Heading 1.1&quot;,
+            &quot;entries&quot; : [{
+                    &quot;title&quot; : &quot;Title1&quot;,
+                    &quot;url&quot; : &quot;/url1&quot;
+                }, {
+                    &quot;title&quot; : &quot;Title2&quot;,
+                    &quot;url&quot; : &quot;/url2&quot;
+                }
+            ]
+        }
+    },
+
+    &quot;a2&quot; : {
+        &quot;name&quot; : &quot;HEADING 2&quot;,
+        &quot;entries&quot; : [{
+                &quot;title&quot; : &quot;Title1&quot;,
+                &quot;url&quot; : &quot;/url1&quot;
+            }, {
+                &quot;title&quot; : &quot;Title2&quot;,
+                &quot;url&quot; : &quot;/url2&quot;
+            }
+        ],
+        &quot;b2&quot; : {
+            &quot;name&quot; : &quot;Heading 2.1&quot;,
+            &quot;entries&quot; : [{
+                    &quot;title&quot; : &quot;Title1&quot;,
+                    &quot;url&quot; : &quot;/url1&quot;
+                }, {
+                    &quot;title&quot; : &quot;Title2&quot;,
+                    &quot;url&quot; : &quot;/url2&quot;
+                }
+            ]
+        }
+    }
+} 
+`
+
+    objA, _ := jason.NewObjectFromBytes([]byte(exampleJSON))
+
+    slcKeys := objA.GetKeys()
+    lenSlcKeys := len(slcKeys)
+
+    if lenSlcKeys == 0 {
+        log.Fatal(&quot;No object key&quot;)
+    }
+
+    if lenSlcKeys == 1 {
+        log.Println(slcKeys)
+    }
+
+    if lenSlcKeys &gt; 1 {
+        log.Println(&quot;MORE THAN 1&quot;, slcKeys)
+    }
+
+    slc2 := make([]*jason.Object, 0)
+
+    for i := 0; i &lt; lenSlcKeys; i++ {
+        obj, err1 := objA.GetObject(slcKeys[i])
+        if err1 == nil {
+            slc2 = append(slc2, obj)
+        }
+
+        //get heading name
+        str, err2 := obj.GetString(&quot;name&quot;)
+        if err2 == nil {
+            log.Println(&quot;NAME&quot;)
+            log.Println(str)
+        }
+
+        //get entries array
+        objArr, err3 := obj.GetObjectArray(&quot;entries&quot;)
+        if err3 == nil {
+            log.Println(&quot;ENTRIES&quot;)
+            log.Println(objArr)
+
+            processSlc(objArr)
+        }
+    }
+}
+</code></pre>
+
+<h3>Output</h3>
+
+<pre><code>MORE THAN 1 [a1 a2]
+NAME
+HEADING 1
+NAME
+HEADING 2
+ENTRIES
+[{&quot;title&quot;:&quot;Title1&quot;,&quot;url&quot;:&quot;/url1&quot;} {&quot;title&quot;:&quot;Title2&quot;,&quot;url&quot;:&quot;/url2&quot;}]
+OBJECT
+{&quot;title&quot;:&quot;Title1&quot;,&quot;url&quot;:&quot;/url1&quot;}
+TITLE
+Title1
+URL
+/url1
+OBJECT
+{&quot;title&quot;:&quot;Title2&quot;,&quot;url&quot;:&quot;/url2&quot;}
+TITLE
+Title2
+URL
+/url2
+</code></pre>

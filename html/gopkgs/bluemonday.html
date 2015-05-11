@@ -1,0 +1,51 @@
+<h3><a href="https://github.com/microcosm-cc/bluemonday">https://github.com/microcosm-cc/bluemonday</a></h3>
+
+<p>bluemonday: a fast golang HTML sanitizer (inspired by the OWASP Java HTML Sanitizer) to scrub user generated content of XSS</p>
+
+<p>bluemonday is a HTML sanitizer implemented in Go. It is fast and highly configurable.</p>
+
+<p>bluemonday takes untrusted user generated content as an input, and will return HTML that has been sanitised against a whitelist of approved HTML elements and attributes so that you can safely include the content in your web page.</p>
+
+<p>If you accept user generated content, and your server uses Go, you <strong>need</strong> bluemonday.</p>
+
+<p>The default policy for user generated content (<code>bluemonday.UGCPolicy().Sanitize()</code>) turns this:
+<code>html
+Hello &lt;STYLE&gt;.XSS{background-image:url(&quot;javascript:alert('XSS')&quot;);}&lt;/STYLE&gt;&lt;A CLASS=XSS&gt;&lt;/A&gt;World
+</code></p>
+
+<p>Into a harmless:
+<code>html
+Hello World
+</code></p>
+
+<p>And it turns this:
+<code>html
+&lt;a href=&quot;javascript:alert('XSS1')&quot; onmouseover=&quot;alert('XSS2')&quot;&gt;XSS&lt;a&gt;
+</code></p>
+
+<p>Into this:
+<code>html
+XSS
+</code></p>
+
+<p>Whilst still allowing this:
+<code>html
+&lt;a href=&quot;http://www.google.com/&quot;&gt;
+  &lt;img src=&quot;https://ssl.gstatic.com/accounts/ui/logo_2x.png&quot;/&gt;
+&lt;/a&gt;
+</code></p>
+
+<p>To pass through mostly unaltered (it gained a rel=&ldquo;nofollow&rdquo; which is a good thing for user generated content):
+<code>html
+&lt;a href=&quot;http://www.google.com/&quot; rel=&quot;nofollow&quot;&gt;
+  &lt;img src=&quot;https://ssl.gstatic.com/accounts/ui/logo_2x.png&quot;/&gt;
+&lt;/a&gt;
+</code></p>
+
+<p>It protects sites from <a href="http://en.wikipedia.org/wiki/Cross-site_scripting">XSS</a> attacks. There are many <a href="https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet">vectors for an XSS attack</a> and the best way to mitigate the risk is to sanitize user input against a known safe list of HTML elements and attributes.</p>
+
+<p>You should <strong>always</strong> run bluemonday <strong>after</strong> any other processing.</p>
+
+<p>If you use <a href="https://github.com/russross/blackfriday">blackfriday</a> or <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> then bluemonday should be run after these steps. This ensures that no insecure HTML is introduced later in your process.</p>
+
+<p>bluemonday is heavily inspired by both the <a href="https://code.google.com/p/owasp-java-html-sanitizer/">OWASP Java HTML Sanitizer</a> and the <a href="http://htmlpurifier.org/">HTML Purifier</a>.</p>

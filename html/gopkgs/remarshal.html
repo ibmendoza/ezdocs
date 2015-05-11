@@ -1,0 +1,190 @@
+<h3><a href="https://github.com/ibmendoza/remarshal">https://github.com/ibmendoza/remarshal</a></h3>
+
+<p>Convert between TOML, YAML and JSON.</p>
+
+<p>Convenience wrapper of <a href="https://github.com/dbohdan/remarshal">Danyil Bohdan&rsquo;s remarshal package</a> which converts his CLI app to library.</p>
+
+<h3>API</h3>
+
+<pre><code class="language-go">func Convert(input []byte, inputF, outputF string) (string, error)
+</code></pre>
+
+<p>where</p>
+
+<ul>
+<li>input - convert your input string to []byte</li>
+<li>inputF - can be TOML, JSON or YAML</li>
+<li>outputF - can be TOML, JSON or YAML</li>
+</ul>
+
+<p>It is up to you if you want to write the converted string to a file which is trivial.</p>
+
+<h3>Example</h3>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;github.com/ibmendoza/remarshal&quot;
+)
+
+func main() {
+    str :=
+        `
+{
+    &quot;a1&quot; : {
+        &quot;name&quot; : &quot;HEADING 1&quot;,
+        &quot;b2&quot; : {
+            &quot;name&quot; : &quot;Heading 1.1&quot;,
+            &quot;entries&quot; : [{
+                    &quot;title&quot; : &quot;Title1&quot;,
+                    &quot;url&quot; : &quot;/url1&quot;
+                }, {
+                    &quot;title&quot; : &quot;Title2&quot;,
+                    &quot;url&quot; : &quot;/url2&quot;
+                }
+            ]
+        }
+    },
+
+    &quot;a2&quot; : {
+        &quot;name&quot; : &quot;HEADING 2&quot;,
+        &quot;entries&quot; : [{
+                &quot;title&quot; : &quot;Title1&quot;,
+                &quot;url&quot; : &quot;/url1&quot;
+            }, {
+                &quot;title&quot; : &quot;Title2&quot;,
+                &quot;url&quot; : &quot;/url2&quot;
+            }
+        ],
+        &quot;b2&quot; : {
+            &quot;name&quot; : &quot;Heading 2.1&quot;,
+            &quot;entries&quot; : [{
+                    &quot;title&quot; : &quot;Title1&quot;,
+                    &quot;url&quot; : &quot;/url1&quot;
+                }, {
+                    &quot;title&quot; : &quot;Title2&quot;,
+                    &quot;url&quot; : &quot;/url2&quot;
+                }
+            ]
+        }
+    }
+}       
+        `
+
+    c, _ := remarshal.Convert([]byte(str), &quot;JSON&quot;, &quot;TOML&quot;)
+
+    fmt.Println(c)
+
+    c, _ = remarshal.Convert([]byte(str), &quot;JSON&quot;, &quot;YAML&quot;)
+
+    fmt.Println(c)
+}
+</code></pre>
+
+<h3>Input: JSON</h3>
+
+<pre><code class="language-javascript">{
+    &quot;a1&quot; : {
+        &quot;name&quot; : &quot;HEADING 1&quot;,
+        &quot;b2&quot; : {
+            &quot;name&quot; : &quot;Heading 1.1&quot;,
+            &quot;entries&quot; : [{
+                    &quot;title&quot; : &quot;Title1&quot;,
+                    &quot;url&quot; : &quot;/url1&quot;
+                }, {
+                    &quot;title&quot; : &quot;Title2&quot;,
+                    &quot;url&quot; : &quot;/url2&quot;
+                }
+            ]
+        }
+    },
+
+    &quot;a2&quot; : {
+        &quot;name&quot; : &quot;HEADING 2&quot;,
+        &quot;entries&quot; : [{
+                &quot;title&quot; : &quot;Title1&quot;,
+                &quot;url&quot; : &quot;/url1&quot;
+            }, {
+                &quot;title&quot; : &quot;Title2&quot;,
+                &quot;url&quot; : &quot;/url2&quot;
+            }
+        ],
+        &quot;b2&quot; : {
+            &quot;name&quot; : &quot;Heading 2.1&quot;,
+            &quot;entries&quot; : [{
+                    &quot;title&quot; : &quot;Title1&quot;,
+                    &quot;url&quot; : &quot;/url1&quot;
+                }, {
+                    &quot;title&quot; : &quot;Title2&quot;,
+                    &quot;url&quot; : &quot;/url2&quot;
+                }
+            ]
+        }
+    }
+} 
+</code></pre>
+
+<h3>Output: TOML</h3>
+
+<pre><code class="language-toml">[a1]
+  name = &quot;HEADING 1&quot;
+  [a1.b2]
+    name = &quot;Heading 1.1&quot;
+
+    [[a1.b2.entries]]
+      title = &quot;Title1&quot;
+      url = &quot;/url1&quot;
+
+    [[a1.b2.entries]]
+      title = &quot;Title2&quot;
+      url = &quot;/url2&quot;
+
+[a2]
+  name = &quot;HEADING 2&quot;
+  [a2.b2]
+    name = &quot;Heading 2.1&quot;
+
+    [[a2.b2.entries]]
+      title = &quot;Title1&quot;
+      url = &quot;/url1&quot;
+
+    [[a2.b2.entries]]
+      title = &quot;Title2&quot;
+      url = &quot;/url2&quot;
+
+  [[a2.entries]]
+    title = &quot;Title1&quot;
+    url = &quot;/url1&quot;
+
+  [[a2.entries]]
+    title = &quot;Title2&quot;
+    url = &quot;/url2&quot;
+</code></pre>
+
+<h3>Output: YAML</h3>
+
+<pre><code>a1:
+  b2:
+    entries:
+    - title: Title1
+      url: /url1
+    - title: Title2
+      url: /url2
+    name: Heading 1.1
+  name: HEADING 1
+a2:
+  b2:
+    entries:
+    - title: Title1
+      url: /url1
+    - title: Title2
+      url: /url2
+    name: Heading 2.1
+  entries:
+  - title: Title1
+    url: /url1
+  - title: Title2
+    url: /url2
+  name: HEADING 2
+</code></pre>

@@ -1,0 +1,135 @@
+<p>This is an application that can make you write script with the Go language.</p>
+
+<p>It is <em>NOT</em> an interpreter but the pure Go. The preprocessor tranforms the script into a Go program, instantly compiles and runs. So it is almost same as the standard Go with the same efficiency.</p>
+
+<p>Benefits</p>
+
+<ul>
+<li>Pure Go language. No need to learn a new script language.</li>
+<li>Pre-imported packages and pre-defined functions make it easy to code.</li>
+<li>Seamless integration with the Go project. E.g. can easily load configuration or data file from the Go project.</li>
+<li>Running efficiency same as Go, much faster than Python.</li>
+</ul>
+
+<h3>Example</h3>
+
+<ul>
+<li>Simple</li>
+</ul>
+
+<pre><code class="language-go">#!/bin/gosl
+
+import &quot;encoding/json&quot;
+
+toJson := func(lines []string) string {
+  res, _ := json.Marshal(struct {
+    Lines []string `json:&quot;lines&quot;`
+  }{
+    Lines: lines,
+  })
+  return string(res)
+}
+
+files := BashEval(&quot;ls -l %s&quot;, &quot;/tmp/&quot;)
+
+Println(toJson(Split(files, &quot;\n&quot;)))   
+</code></pre>
+
+<ul>
+<li><p><a href="http://go-search.org/">Go Search</a> is now operating with gosl. So you can find some good examples at: <a href="https://github.com/daviddengcn/gcse/tree/master/scripts">https://github.com/daviddengcn/gcse/tree/master/scripts</a></p></li>
+
+<li><p><a href="http://github.com/daviddengcn/go-diff">go-diff</a> also provides scripts in gosl: <a href="https://github.com/daviddengcn/go-diff/tree/master/scripts">https://github.com/daviddengcn/go-diff/tree/master/scripts</a></p></li>
+</ul>
+
+<h3>Installation and Usage</h3>
+
+<h4>Download and install the package</h4>
+
+<pre><code class="language-bash">go get github.com/daviddengcn/gosl
+go install github.com/daviddengcn/gosl
+</code></pre>
+
+<h4>(Optional) Link to <code>/bin</code></h4>
+
+<pre><code class="language-bash">sudo ln -s $GOPATH/bin/gosl /bin/gosl
+</code></pre>
+
+<p>If you don&rsquo;t want to do this, the interpreter line can be like this, assuming <code>$GOPATH/bin</code> is in your <code>$PATH</code>:</p>
+
+<pre><code class="language-bash">#!/usr/bin/env gosl
+</code></pre>
+
+<h4>Run a script</h4>
+
+<p>If a script starts with the bash interpreter line: <code>#!/bin/gosl</code>. You can run it like this</p>
+
+<pre><code class="language-bash">chmod a+x example.go
+./example.go [params...]
+</code></pre>
+
+<p>Or you can explictly call <code>gosl</code> to run it:</p>
+
+<pre><code class="language-bash">gosl example.go [params...]
+</code></pre>
+
+<h3>Pre-imported Packages</h3>
+
+<p>The following packages are pre-imported with <code>.</code>, i.e. you can directly use the methods exported by them. No complain of the compiler if you don&rsquo;t use them.</p>
+
+<p><code>fmt</code>, <code>os</code>, <code>strings</code>, <code>strconv</code>, <code>math</code>, <code>time</code>, and <code>github.com/daviddengcn/gosl/builtin</code></p>
+
+<h3>Frequently Used <code>builtin</code> Functions</h3>
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>S</code></td>
+<td>Convert anything to a <code>string</code></td>
+<td><code>S(1234) == &quot;123&quot;</code></td>
+</tr>
+
+<tr>
+<td><code>I</code></td>
+<td>Convert anything to an <code>int</code></td>
+<td><code>I(&quot;1234&quot;) == 1234</code></td>
+</tr>
+
+<tr>
+<td><code>BashEval</code></td>
+<td>Similar to bash backtick substitution.</td>
+<td><code>lsstr := BashEval(&quot;ls -l&quot;)</code></td>
+</tr>
+
+<tr>
+<td><code>Exec</code></td>
+<td>Execute an command with arguments</td>
+<td><code>err, code := Exec(&quot;rm&quot;, &quot;-rf&quot; &quot;tmp&quot;)</code></td>
+</tr>
+
+<tr>
+<td><code>Bash</code></td>
+<td>Execute a bash line</td>
+<td><code>err, code := Bash(&quot;rm -rf tmp&quot;)</code></td>
+</tr>
+
+<tr>
+<td><code>ScriptDir</code></td>
+<td>Returns the directory of the script</td>
+<td><code>file := ScriptDir() + &quot;/&quot; + fn</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>More functions are defined in package <a href="https://github.com/daviddengcn/gosl/tree/master/builtin">daviddengcn/gosl/builtin/</a> (<a href="http://godoc.org/github.com/daviddengcn/gosl/builtin">godoc</a>)</p>
+
+<h3>License</h3>
+
+<p>Apache License V2</p>

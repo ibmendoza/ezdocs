@@ -1,0 +1,58 @@
+<h3><a href="https://github.com/influxdb/influxdb">https://github.com/influxdb/influxdb</a></h3>
+
+<p>Scalable datastore for metrics, events, and real-time analytics <a href="http://influxdb.com">http://influxdb.com</a></p>
+
+<h3>An Open-Source, Distributed, Time Series Database</h3>
+
+<p>InfluxDB is an open source <strong>distributed time series database</strong> with <strong>no external dependencies</strong>. It&rsquo;s useful for recording metrics, events, and performing analytics.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Built-in <a href="http://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html">HTTP API</a> so you don&rsquo;t have to write any server side code to get up and running.</li>
+<li>Clustering is supported out of the box, so that you can scale horizontally to handle your data.</li>
+<li>Simple to install and manage, and fast to get data in and out.</li>
+<li>It aims to answer queries in real-time. That means every data point is
+indexed as it comes in and is immediately available in queries that
+should return in &lt; 100ms.</li>
+</ul>
+
+<h3>Starting InfluxDB</h3>
+
+<ul>
+<li><code>service influxdb start</code> if you have installed InfluxDB using an official Debian or RPM package.</li>
+<li><code>$GOPATH/bin/influxd</code> if you have built InfluxDB from source.</li>
+</ul>
+
+<h3>Creating your first database</h3>
+
+<pre><code class="language-JSON">curl -G 'http://localhost:8086/query' --data-urlencode &quot;q=CREATE DATABASE mydb&quot;
+</code></pre>
+
+<h3>Insert some data</h3>
+
+<pre><code class="language-JSON">curl -H &quot;Content-Type: application/json&quot; http://localhost:8086/write -d '
+{
+    &quot;database&quot;: &quot;mydb&quot;,
+    &quot;retentionPolicy&quot;: &quot;default&quot;,
+    &quot;points&quot;: [
+        {
+            &quot;timestamp&quot;: &quot;2014-11-10T23:00:00Z&quot;,
+            &quot;name&quot;: &quot;cpu&quot;,
+             &quot;tags&quot;: {
+                 &quot;region&quot;:&quot;uswest&quot;,
+                 &quot;host&quot;: &quot;server01&quot;
+            },
+             &quot;fields&quot;:{
+                 &quot;value&quot;: 100
+            }
+         }
+      ]
+}'
+</code></pre>
+
+<h3>Query for the data</h3>
+
+<pre><code class="language-JSON">curl -G http://localhost:8086/query?pretty=true \
+--data-urlencode &quot;db=mydb&quot; --data-urlencode &quot;q=SELECT * FROM cpu&quot;
+</code></pre>

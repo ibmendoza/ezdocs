@@ -1,0 +1,89 @@
+<h3><a href="https://github.com/fvbock/endless">https://github.com/fvbock/endless</a></h3>
+
+<p>Zero downtime restarts for golang HTTP and HTTPS servers.</p>
+
+<h3>Inspiration &amp; Credits</h3>
+
+<p>Well&hellip; it&rsquo;s what you want right - no need to hook in and out on a loadbalancer or something - just compile, SIGHUP, start new one, finish old requests etc.</p>
+
+<p>There is <a href="https://github.com/rcrowley/goagain">https://github.com/rcrowley/goagain</a> and i looked at <a href="https://fitstar.github.io/falcore/hot_restart.html">https://fitstar.github.io/falcore/hot_restart.html</a> which looked easier to do, but still some assembly required. I wanted something that&rsquo;s ideally as simple as</p>
+
+<pre><code>err := endless.ListenAndServe(&quot;localhost:4242&quot;, mux)
+</code></pre>
+
+<p>I found the excellent post <a href="http://grisha.org/blog/2014/06/03/graceful-restart-in-golang/">Graceful Restart in Golang</a> by <a href="https://github.com/grisha">Grisha Trubetskoy</a> and took his code as a start. So a lot of credit to Grisha!</p>
+
+<h3>Features</h3>
+
+<ul>
+<li>Drop-in replacement for <code>http.ListenAndServe</code> and <code>http.ListenAndServeTLS</code></li>
+<li>Signal hooks to execute your own code before or after the listened to signals (SIGHUP, SIGUSR1, SIGUSR2, SIGINT, SIGTERM, SIGTSTP)</li>
+<li>You can start multiple servers from one binary and endless will take care of the different sockets/ports assignments when restarting</li>
+</ul>
+
+<h3>Default Timeouts &amp; MaxHeaderBytes</h3>
+
+<p>There are three variables exported by the package that control the values set for <code>DefaultWriteTimeOut</code>, <code>DefaultWriteTimeOut</code>, and <code>MaxHeaderBytes</code> on the inner <a href="https://golang.org/pkg/net/http/#Server"><code>http.Server</code></a>:</p>
+
+<pre><code>DefaultReadTimeOut    time.Duration
+DefaultWriteTimeOut   time.Duration
+DefaultMaxHeaderBytes int
+</code></pre>
+
+<p>The endless default behaviour is to use the same defaults defined in <code>net/http</code>.</p>
+
+<p>These have impact on endless by potentially not letting the parent process die until all connections are handled/finished.</p>
+
+<h3>Hammer Time</h3>
+
+<p>To deal with hanging requests on the parent after restarting endless will <em>hammer</em> the parent 60 seconds after recieving the shutdown signal from the forked child process. When hammered still running requests get terminated. This behaviour can be controlled by another exported variable:</p>
+
+<pre><code>DefaultHammerTime time.Duration
+</code></pre>
+
+<p>The default is 60 seconds. When set to <code>-1</code> <code>hammerTime()</code> is not invoked automatically. You can then hammer the parent manually by sending <code>SIGUSR2</code>. This will only hammer the parent if it is already in shutdown mode. So unless the process had received a <code>SIGTERM</code>, <code>SIGSTOP</code>, or <code>SIGINT</code> (manually or by forking) before <code>SIGUSR2</code> will be ignored.</p>
+
+<p>If you had hanging requests and the server got hammered you will see a log message like this:</p>
+
+<pre><code>2015/04/04 13:04:10 [STOP - Hammer Time] Forcefully shutting down parent
+</code></pre>
+
+<h3>Examples &amp; Documentation</h3>
+
+<pre><code>import &quot;github.com/fvbock/endless&quot;
+</code></pre>
+
+<p>and then replacing <code>http.ListenAndServe</code> with <code>endless.ListenAndServe</code> or <code>http.ListenAndServeTLS</code> with <code>endless.ListenAndServeTLS</code></p>
+
+<pre><code>err := endless.ListenAndServe(&quot;localhost:4242&quot;, handler)
+</code></pre>
+
+<p>After starting your server you can make some changes, build, and send <code>SIGHUP</code> to the running process and it will finish handling any outstanding requests and serve all new incomming ones with the new binary.</p>
+
+<p>More examples are in <a href="https://github.com/fvbock/endless/tree/master/examples">here</a></p>
+
+<p>There is also <a href="https://godoc.org/github.com/fvbock/endless">GoDoc Documentation</a></p>
+
+<h3>Signals</h3>
+
+<p>The endless server will listen for the following signals: <code>syscall.SIGHUP</code>, <code>syscall.SIGUSR1</code>, <code>syscall.SIGUSR2</code>, <code>syscall.SIGINT</code>, <code>syscall.SIGTERM</code>, and <code>syscall.SIGTSTP</code>:</p>
+
+<p><code>SIGHUP</code> will trigger a fork/restart</p>
+
+<p><code>syscall.SIGINT</code> and <code>syscall.SIGTERM</code> will trigger a shutdown of the server (it will finish running requests)</p>
+
+<p><code>SIGUSR2</code> will trigger <a href="https://github.com/fvbock/endless#hammer-time">hammerTime</a></p>
+
+<p><code>SIGUSR1</code> and <code>SIGTSTP</code> are listened for but do not trigger anything in the endless server itself. (porbably useless - might get rid of those two)</p>
+
+<p>You can hook your own functions to be called <em>pre</em> or <em>post</em> signal handling - eg. pre fork or pre shutdown. More about that in the <a href="https://github.com/fvbock/endless/tree/master/examples#hooking-into-the-signal-handling">hook examle</a>.</p>
+
+<h3>Limitation: No changing of ports</h3>
+
+<p>Currently you cannot restart a server on a different port than the previous version was running on.</p>
+
+<h3>License</h3>
+
+<p>MIT</p>
+
+<p>Copyright &copy; 2015 Florian von Bock</p>
