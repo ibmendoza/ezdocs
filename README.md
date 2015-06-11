@@ -10,7 +10,6 @@ The right sidebar serves as the actual content where code is syntax highlighted 
 
 - Markdown to HTML (using Blackfriday tool)
 - Bootstrap 2 (United theme by default)
-- A local Web server (compile it in Go)
 - Static content but dynamically rendered at client-side using AJAX
 - Tree view of table of contents (left side bar)
 - Powered by highlight.js for syntax highlight
@@ -44,52 +43,13 @@ go get github.com/russross/blackfriday-tool
 blackfriday-tool article.md article.html
 ```
 
-#### 4. Get Go httprouter package
+#### 4. Download Caddy Web server
 
-```go
-go get github.com/julienschmidt/httprouter
-```
+Download [here](http://caddyserver.com/download)
 
-#### 5. Build local Web server
+#### 5. Put your static files to a folder at the same level of Caddy
 
-```go
-package main
-
-import (
-	"fmt"
-	"github.com/julienschmidt/httprouter"
-	"log"
-	"net/http"
-	"runtime"
-)
-
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome!\n")
-}
-
-func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
-}
-
-func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
-	router := httprouter.New()
-	router.GET("/", Index)
-	router.GET("/hello/:name", Hello)
-
-	//https://github.com/julienschmidt/httprouter/issues/7
-	router.ServeFiles("/static/*filepath", http.Dir("C:/static"))
-
-	log.Fatal(http.ListenAndServe(":8080", router))
-}
-```
-
-#### 6. Put your static files to a folder of your choosing
-
-In Windows example above, it is located at C:/Static. See folder structure
-
-#### 7. Modify jqready.js to include route of html file converted by Blackfriday tool
+#### 6. Modify jqready.js to include route of html file converted by Blackfriday tool
 
 ```javascript
   var routes = {
@@ -102,11 +62,13 @@ In Windows example above, it is located at C:/Static. See folder structure
   }
 ```
 
-#### 8. Run local Web server
+#### 7. Run Caddy Web server
 
-#### 9. See your ezdocs
+#### 8. See your ezdocs
 
-Open your Web browser, put http://localhost:8080/static
+For example, if you extracted Caddy to C:\web and your static files are at C:\web\static
+
+you can see your ezdocs at http://localhost:2015/static
 
 ### License
 
