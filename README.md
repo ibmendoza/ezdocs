@@ -31,11 +31,8 @@ The right sidebar serves as the actual content where code is syntax highlighted 
 
 #### 1 .Compile Blackfriday tool
 
-Download Blackfriday Tool at
+Download Blackfriday Tool at [https://github.com/itmarketplace/blackfriday-tool/releases](https://github.com/itmarketplace/blackfriday-tool/releases)
 
-```
-[https://github.com/itmarketplace/blackfriday-tool/releases](https://github.com/itmarketplace/blackfriday-tool/releases)
-```
 
 #### 2. Create your Markdown content
 
