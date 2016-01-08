@@ -39,7 +39,7 @@ Download Blackfriday Tool at [https://github.com/itmarketplace/blackfriday-tool/
 #### 3. Convert Markdown to HTML
 
 ```
-blackfriday-tool article.md article.html
+bt article.md article.html
 ```
 
 #### 4. Download Caddy Web server
