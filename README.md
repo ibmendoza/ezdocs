@@ -6,6 +6,14 @@ The left sidebar serves as table of contents for a particular topic.
 
 The right sidebar serves as the actual content where code is syntax highlighted according to GitHub style.
 
+See examples:
+
+- [softwareforhumans.org/sql](http://softwareforhumans.org/sql)
+- [softwareforhumans.org/visual](http://softwareforhumans.org/visual)
+- [softwareforhumans.org/gobyexample](http://softwareforhumans.org/gobyexample)
+- [itmarketplace.net/messaging](http://itmarketplace.net/messaging)
+- [itmarketplace.net/irismq](http://itmarketplace.net/irismq)
+
 <img src="https://itjumpstart.files.wordpress.com/2016/03/sfh.png">
 
 ### Features:
