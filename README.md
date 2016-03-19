@@ -83,4 +83,4 @@ you can see your ezdocs at http://localhost:2015/static
 
 MIT
 
-Copyright (c) 2015 - Isagani Mendoza
+Copyright (c) 2016 - Isagani Mendoza
