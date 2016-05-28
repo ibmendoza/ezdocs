@@ -8,6 +8,7 @@ The right sidebar serves as the actual content where code is syntax highlighted 
 
 See examples:
 
+- [itmarketplace.net/gobyexample](http://itmarketplace.net/gobyexample)
 - [itmarketplace.net/sql](http://itmarketplace.net/sql)
 - [itmarketplace.net/gocheatsheet](http://itmarketplace.net/gocheatsheet)
 
