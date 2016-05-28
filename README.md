@@ -8,11 +8,8 @@ The right sidebar serves as the actual content where code is syntax highlighted 
 
 See examples:
 
-- [softwareforhumans.org/sql](http://softwareforhumans.org/sql)
-- [softwareforhumans.org/gocheatsheet](http://softwareforhumans.org/gocheatsheet)
-- [softwareforhumans.org/gobyexample](http://softwareforhumans.org/gobyexample)
-- [itmarketplace.net/messaging](http://itmarketplace.net/messaging)
-- [itmarketplace.net/irismq](http://itmarketplace.net/irismq)
+- [itmarketplace.net/sql](http://itmarketplace.net/sql)
+- [itmarketplace.net/gocheatsheet](http://itmarketplace.net/gocheatsheet)
 
 <img src="https://itjumpstart.files.wordpress.com/2016/03/sfh.png">
 
