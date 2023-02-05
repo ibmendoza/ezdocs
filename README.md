@@ -63,13 +63,11 @@ Download [here](http://caddyserver.com/download)
   }
 ```
 
-#### 7. Run Caddy Web server
+#### 7. Run [ran](https://github.com/m3ng9i/ran), a simple static web server
 
 #### 8. See your ezdocs
 
-For example, if you extracted Caddy to C:\web and your static files are at C:\web\static
-
-you can see your ezdocs at http://localhost:2015/static
+http://localhost:8080 (default port of ran)
 
 ### License
 
