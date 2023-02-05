@@ -72,5 +72,3 @@ http://localhost:8080 (default port of ran)
 ### License
 
 MIT
-
-Copyright (c) 2016 - Isagani Mendoza
