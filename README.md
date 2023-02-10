@@ -46,7 +46,7 @@ bt article.md article.html
 
 #### 4. Download [Ran]((https://github.com/m3ng9i/ran)) static Web server
 
-For Windows, download win.zip
+For Windows, it's win.zip in this repo
 
 #### 5. Put your static files to a folder at the same level of Caddy
 
