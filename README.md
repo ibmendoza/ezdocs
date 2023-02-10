@@ -44,9 +44,9 @@ Download source code [here](https://github.com/russross/blackfriday-tool)
 bt article.md article.html
 ```
 
-#### 4. Download Caddy Web server
+#### 4. Download [Ran]((https://github.com/m3ng9i/ran)) static Web server
 
-Download [here](http://caddyserver.com/download)
+For Windows, download win.zip
 
 #### 5. Put your static files to a folder at the same level of Caddy
 
@@ -63,7 +63,7 @@ Download [here](http://caddyserver.com/download)
   }
 ```
 
-#### 7. Run [ran](https://github.com/m3ng9i/ran), a simple static web server
+#### 7. Run the static Web server **ran**
 
 #### 8. See your ezdocs
 
